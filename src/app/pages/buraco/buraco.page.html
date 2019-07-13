@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button color="secondary"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-text color="light">
+        <ion-text color="light" class="fw700">Registrar ocorrência</ion-text>
+      </ion-text>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button size="small" shape="round" color="medium">
+        <ion-icon name="notifications"></ion-icon>
+        <ion-badge color="dark" slot="end">1</ion-badge>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form #form="ngForm" (ngSubmit)="onFormSubmit(form)">
+    <ion-item>
+      <ion-label position="floating">Latitude</ion-label>
+      <ion-input type="text" name="Latitude" ngModel></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Longitude</ion-label>
+      <ion-input type="text" name="Longitude" ngModel></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Cep</ion-label>
+      <ion-input type="text" name="Cep" ngModel></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Logradouro</ion-label>
+      <ion-input type="text" name="Logradouro" ngModel></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Observação</ion-label>
+      <ion-input type="text" name="Observacao" ngModel></ion-input>
+    </ion-item>
+
+    <br>
+
+    <img *ngIf="photo" [src]="photo" />
+
+    <ion-button type="button" class="botaoCamera" shape="round" color="dark" size="default" ion-button
+      (click)="startCamera()">
+      <!-- Advanced: explicity set the icon for each platform -->
+      <ion-icon ios="ios-camera" size="medium" md="md-camera"></ion-icon>
+    </ion-button>
+    <br>
+
+    <ion-button type="submit" shape="round" color="primary" expand="block" [disabled]="!productForm.valid">
+      Enviar
+    </ion-button>
+  </form>
+
+
+
+
+
+</ion-content>
