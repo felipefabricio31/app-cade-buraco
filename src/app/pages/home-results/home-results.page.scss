@@ -3,6 +3,12 @@
     --background: var(--ion-color-light);
   }
 
+  ion-content.background {
+    --background: url('../../../assets/img/imgHome.jpeg') no-repeat;
+    width: 100%;
+    height: auto;
+  }
+
   ion-item {
     border-radius: 0;
     border-bottom: 1px dotted var(--ion-color-medium);
@@ -15,6 +21,7 @@
   }
 }
 
-.imgFundo {
-
+.iconeBuraco {
+  margin-left: 60%;
+  margin-top: 80%;
 }

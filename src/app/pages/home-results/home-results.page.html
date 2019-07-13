@@ -15,32 +15,34 @@
       </ion-button>
     </ion-buttons>-->
   </ion-toolbar>
-
 </ion-header>
 
-<ion-content>
-  <ion-card no-margin class="no-radius" *ngIf="yourLocation">
-    <ion-item lines="none" color="medium">
-      <ion-label>
-        <h2 no-margin class="fw500 no-margin">
-          <ion-text color="dark">Alert / Toast test</ion-text>
-        </h2>
+<ion-content padding class="background">
+  <div >
+    <ion-card no-margin class="no-radius" *ngIf="yourLocation">
+      <ion-item lines="none" color="medium">
+        <ion-label>
+          <h2 no-margin class="fw500 no-margin">
+            <ion-text color="dark">Alert / Toast test</ion-text>
+          </h2>
 
-        <p class="text-11x no-margin">
-          <ion-text color="primary">{{yourLocation}}</ion-text>
-        </p>
-      </ion-label>
-      <ion-button shape="round" fill="outline" size="small" color="primary" (click)="alertLocation()">
-        Location
-        <ion-icon name="locate"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-card>
+          <p class="text-11x no-margin">
+            <ion-text color="primary">{{yourLocation}}</ion-text>
+          </p>
+        </ion-label>
+        <ion-button shape="round" fill="outline" size="small" color="primary" (click)="alertLocation()">
+          Location
+          <ion-icon name="locate"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-card>
 
-  <div class="imgFundo">
-    <ion-img [src]="imgFundo"></ion-img>
+    <ion-button type="button" class="iconeBuraco" shape="round" color="danger" size="default" ion-button
+      (click)="goToBuraco()">
+      <!-- Advanced: explicity set the icon for each platform -->
+      <ion-icon ios="ios-megaphone" size="medium" md="md-megaphone"></ion-icon>
+    </ion-button>
+
+    <!--<popmenu></popmenu>-->
   </div>
-  
-  <popmenu></popmenu>
-
 </ion-content>

@@ -15,6 +15,7 @@ import { NotificationsComponent } from './../../components/notifications/notific
 import { Storage } from '@ionic/storage';
 import axios from 'axios';
 import { GlobalUrl } from 'src/app/globalurl';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-results',
@@ -34,7 +35,8 @@ export class HomeResultsPage {
     public modalCtrl: ModalController,
     public toastCtrl: ToastController,
     private  storage:  Storage,
-    private globalUrl: GlobalUrl
+    private globalUrl: GlobalUrl,
+    private  router: Router, 
   ) {
 
   }
@@ -126,6 +128,10 @@ export class HomeResultsPage {
       showBackdrop: true
     });
     return await popover.present();
+  }
+
+  goToBuraco() {
+    this.router.navigateByUrl('/buraco');
   }
 
 }
