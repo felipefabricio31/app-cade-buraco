@@ -6,4 +6,8 @@ export class Localizacao {
     bairro: string;
     complemento: string;
     observacao: string;
+    cidade: string;
+    uf: string;
+    estado: string;
+    enderecoCompleto: string;
 }

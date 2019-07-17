@@ -18,8 +18,6 @@ import { GlobalUrl } from './globalurl';
 import { NotificationsComponent } from './components/notifications/notifications.component';
 //Localização
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { GaoDeLocation } from '@ionic-native/gao-de-location/ngx';
-
 
 @NgModule({
   declarations: [AppComponent, NotificationsComponent],
@@ -37,8 +35,7 @@ import { GaoDeLocation } from '@ionic-native/gao-de-location/ngx';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     GlobalUrl,
-    Geolocation,
-    GaoDeLocation
+    Geolocation
   ],
   bootstrap: [AppComponent]
 })

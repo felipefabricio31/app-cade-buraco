@@ -31,10 +31,12 @@
     "@ionic/storage": "^2.2.0",
     "axios": "^0.18.0",
     "cordova-android": "8.0.0",
+    "cordova-ios": "5.0.1",
     "cordova-plugin-camera": "^4.1.0",
     "core-js": "^2.5.4",
     "ionicons": "4.5.5",
     "rxjs": "~6.5.1",
+    "rxjs-compat": "^6.5.2",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.29"
   },
@@ -87,7 +89,8 @@
       }
     },
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   }
 }

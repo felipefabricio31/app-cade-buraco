@@ -10,19 +10,18 @@ import { GlobalUrl } from 'src/app/globalurl';
 import { AlertsComponent } from 'src/app/components/alerts/alerts.component';
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { Buraco } from 'src/app/interfaces/buraco';
 import { Localizacao } from 'src/app/interfaces/localizacao';
-import { GaoDeLocation } from '@ionic-native/gao-de-location/ngx';
+import { EnderecoService } from 'src/app/services/endereco-service';
 
 @Component({
   selector: 'app-buraco',
   templateUrl: './buraco.page.html',
   styleUrls: ['./buraco.page.scss'],
-  providers: [Camera, AlertsComponent]
+  providers: [Camera, AlertsComponent, EnderecoService]
 })
 export class BuracoPage implements OnInit {
 
-  testeString: string;
+  public localizacao = new Localizacao();
   private latitude: number;
   private longitude: number;
 
@@ -42,7 +41,7 @@ export class BuracoPage implements OnInit {
     public navController: NavController,
     public alertsComponent: AlertsComponent,
     public geolocation: Geolocation,
-    private gaoDeLocation: GaoDeLocation
+    public enderecoService: EnderecoService
   ) { }
 
   ngOnInit() {
@@ -54,28 +53,31 @@ export class BuracoPage implements OnInit {
     this.geolocation.getCurrentPosition()
       .then((resp) => {
         this.latitude = resp.coords.latitude
-        this.longitude = resp.coords.longitude
+        this.longitude = resp.coords.longitude;
 
-        //this.getClima()
-        console.log("Lat - " + this.latitude)
-        console.log("Long - " + this.longitude)
-
-        //Esse serviço da Google está limitado a 2.500 
-        //consultas ao dia e quem possui o pacote de serviços 
-        //empresarial da Google pode realizar até 100.000 consultas por dia.
-
+        this.getEndereco();
       })
       .catch(err => {
         //Tratamendo da excessão
         console.log("Erro")
       });
+  }
 
-    this.gaoDeLocation.getCurrentPosition()
-      .then((res) => {
-        this.testeString = res.city;
-        console.log('getCurrentPosition' + res)
-      })
-      .catch((error) => console.error(error));
+  getEndereco() {
+    this.enderecoService.getEndereco(this.latitude, this.longitude)
+      .subscribe(resp => {
+        //console.log(resp);
+        //https://nominatim.org/release-docs/develop/api/Reverse/
+
+        this.localizacao.cidade = resp.features[0].properties.address.city;
+        this.localizacao.bairro = resp.features[0].properties.address.suburb;
+        this.localizacao.cep = resp.features[0].properties.address.postcode;
+        this.localizacao.logradouro = resp.features[0].properties.address.road;
+        this.localizacao.enderecoCompleto = resp.features[0].properties.display_name;
+
+      }, err => {
+        console.log(err);
+      });
   }
 
   //Responsável por abrir a camera para tirar fotografia do buraco
