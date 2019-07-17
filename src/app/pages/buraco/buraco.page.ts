@@ -9,6 +9,11 @@ import axios from 'axios';
 import { GlobalUrl } from 'src/app/globalurl';
 import { AlertsComponent } from 'src/app/components/alerts/alerts.component';
 
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { Buraco } from 'src/app/interfaces/buraco';
+import { Localizacao } from 'src/app/interfaces/localizacao';
+import { GaoDeLocation } from '@ionic-native/gao-de-location/ngx';
+
 @Component({
   selector: 'app-buraco',
   templateUrl: './buraco.page.html',
@@ -17,11 +22,14 @@ import { AlertsComponent } from 'src/app/components/alerts/alerts.component';
 })
 export class BuracoPage implements OnInit {
 
-  productForm: FormGroup;
-  street:string='';
-  proto:string='';
+  testeString: string;
+  private latitude: number;
+  private longitude: number;
 
-  photo:any;
+  productForm: FormGroup;
+  street: string = '';
+  proto: string = '';
+  photo: any;
 
   constructor(
     public loadingController: LoadingController,
@@ -32,11 +40,45 @@ export class BuracoPage implements OnInit {
     private camera: Camera,
     private globalUrl: GlobalUrl,
     public navController: NavController,
-    public alertsComponent: AlertsComponent
-  ) {
-      
+    public alertsComponent: AlertsComponent,
+    public geolocation: Geolocation,
+    private gaoDeLocation: GaoDeLocation
+  ) { }
+
+  ngOnInit() {
+    this.productForm = this.formBuilder.group({
+      // 'street' : [null, Validators.required],
+    });
+
+    //Captura a latitude e longitudo do usuário
+    this.geolocation.getCurrentPosition()
+      .then((resp) => {
+        this.latitude = resp.coords.latitude
+        this.longitude = resp.coords.longitude
+
+        //this.getClima()
+        console.log("Lat - " + this.latitude)
+        console.log("Long - " + this.longitude)
+
+        //Esse serviço da Google está limitado a 2.500 
+        //consultas ao dia e quem possui o pacote de serviços 
+        //empresarial da Google pode realizar até 100.000 consultas por dia.
+
+      })
+      .catch(err => {
+        //Tratamendo da excessão
+        console.log("Erro")
+      });
+
+    this.gaoDeLocation.getCurrentPosition()
+      .then((res) => {
+        this.testeString = res.city;
+        console.log('getCurrentPosition' + res)
+      })
+      .catch((error) => console.error(error));
   }
 
+  //Responsável por abrir a camera para tirar fotografia do buraco
   startCamera() {
     const options: CameraOptions = {
       quality: 100,
@@ -46,24 +88,19 @@ export class BuracoPage implements OnInit {
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     }
-    
+
     this.camera.getPicture(options).then((imageData) => {
-     // imageData is either a base64 encoded string or a file URI
-     // If it's base64 (DATA_URL):
-     this.photo = 'data:image/jpeg;base64,' + imageData;
+      // imageData is either a base64 encoded string or a file URI
+      // If it's base64 (DATA_URL):
+      this.photo = 'data:image/jpeg;base64,' + imageData;
     }, (err) => {
-     // Handle error
+      // Handle error
     });
   }
 
-  ngOnInit() {
-    this.productForm = this.formBuilder.group({
-      // 'street' : [null, Validators.required],
-    });
-  }
 
-  async onFormSubmit(form:NgForm) {
-    
+  async onFormSubmit(form: NgForm) {
+
     const loading = await this.loadingController.create({
       message: 'Loading...'
     });
@@ -72,17 +109,16 @@ export class BuracoPage implements OnInit {
     let formData = new FormData;
     formData.append('photo', this.photo);
     formData.append('street', form.value.street);
+    //Parâmetros que devemos enviar para API
 
-      await axios.post(`${this.globalUrl.baseAPIUrl}/buraco`, formData)
-      .then( res => {
+    await axios.post(`${this.globalUrl.baseAPIUrl}/buraco`, formData)
+      .then(res => {
         this.alertsComponent.saveSuccess();
         this.navController.navigateRoot('/home-results');
       })
-      .catch( err => {
+      .catch(err => {
         loading.dismiss();
       })
-        loading.dismiss();
-
-   }
-
+    loading.dismiss();
+  }
 }

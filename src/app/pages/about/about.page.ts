@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AboutPage implements OnInit {
 
+  imgFundo = '../../../assets/img/imgMapa2.jpeg';
+
   constructor() { }
 
   ngOnInit() {

@@ -1,13 +1,13 @@
 :host {
   ion-content {
-    --background: var(--ion-color-light);
+    //--background: var(--ion-color-light);
+    --background: linear-gradient(135deg, var(--ion-color-dark), var(--ion-color-primary));
   }
 
+  /*
   ion-content.background {
-    --background: url('../../../assets/img/imgHome.jpeg') no-repeat;
-    width: 100%;
-    height: auto;
-  }
+    --background: url("../../../assets/img/HomeSemTexto.jpg") no-repeat ;
+  }*/
 
   ion-item {
     border-radius: 0;
@@ -22,6 +22,6 @@
 }
 
 .iconeBuraco {
-  margin-left: 60%;
-  margin-top: 80%;
+  margin-top: 10%;
+  margin-left: 20%;
 }

@@ -36,10 +36,18 @@
       <ion-input type="text" name="Logradouro" ngModel></ion-input>
     </ion-item>
     <ion-item>
+      <ion-label position="floating">Complemento</ion-label>
+      <ion-input type="text" name="Complemento" ngModel></ion-input>
+    </ion-item>
+    <ion-item>
       <ion-label position="floating">Observação</ion-label>
       <ion-input type="text" name="Observacao" ngModel></ion-input>
     </ion-item>
 
+    <ion-item>
+      <ion-label position="floating">{{testeString}}</ion-label>
+    </ion-item>
+    
     <br>
 
     <img *ngIf="photo" [src]="photo" />

@@ -17,8 +17,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding class="background">
-  <div >
+<ion-content>
     <ion-card no-margin class="no-radius" *ngIf="yourLocation">
       <ion-item lines="none" color="medium">
         <ion-label>
@@ -37,12 +36,15 @@
       </ion-item>
     </ion-card>
 
-    <ion-button type="button" class="iconeBuraco" shape="round" color="danger" size="default" ion-button
-      (click)="goToBuraco()">
+    <ion-img [src]="imgFundo"></ion-img>
+
+    <ion-button type="button" class="iconeBuraco" shape="round" color="danger" size="large" ion-button
+      (click)="goToBuraco()"> Ocorrências
       <!-- Advanced: explicity set the icon for each platform -->
-      <ion-icon ios="ios-megaphone" size="medium" md="md-megaphone"></ion-icon>
+      <ion-icon ios="ios-locate" size="medium" md="md-locate"></ion-icon>
     </ion-button>
 
+
     <!--<popmenu></popmenu>-->
-  </div>
+  
 </ion-content>

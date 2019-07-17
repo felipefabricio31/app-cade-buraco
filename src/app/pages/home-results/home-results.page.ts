@@ -25,7 +25,7 @@ import { Router } from '@angular/router';
 export class HomeResultsPage {
   searchKey = '';
   yourLocation = '';
-  imgFundo = '../../../assets/img/imgHome.jpeg';
+  imgFundo = '../../../assets/img/imgHome2.jpg';
 
   constructor(
     public navCtrl: NavController,
