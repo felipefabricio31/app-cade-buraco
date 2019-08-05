@@ -9,21 +9,35 @@ import axios from 'axios';
 import { GlobalUrl } from 'src/app/globalurl';
 import { AlertsComponent } from 'src/app/components/alerts/alerts.component';
 
-import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Localizacao } from 'src/app/interfaces/localizacao';
-import { EnderecoService } from 'src/app/services/endereco-service';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { NativeGeocoder, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
+import { NativeGeocoderResult } from '@ionic-native/native-geocoder/ngx';
 
 @Component({
   selector: 'app-buraco',
   templateUrl: './buraco.page.html',
   styleUrls: ['./buraco.page.scss'],
-  providers: [Camera, AlertsComponent, EnderecoService]
+  providers: [Camera, AlertsComponent]
 })
 export class BuracoPage implements OnInit {
 
-  public localizacao = new Localizacao();
-  private latitude: number;
-  private longitude: number;
+  public localizacao: Localizacao;
+  userLocation;
+  geoLatitude: number;
+  geoLongitude: number;
+  geoAccuracy: number;
+  geoAddress: string;
+
+  watchLocationUpdates: any;
+  loading: any;
+  isWatching: boolean;
+
+  //Geocoder configuration
+  geoencoderOptions: NativeGeocoderOptions = {
+    useLocale: true,
+    maxResults: 5
+  };
 
   productForm: FormGroup;
   street: string = '';
@@ -41,7 +55,7 @@ export class BuracoPage implements OnInit {
     public navController: NavController,
     public alertsComponent: AlertsComponent,
     public geolocation: Geolocation,
-    public enderecoService: EnderecoService
+    private nativeGeocoder: NativeGeocoder
   ) { }
 
   ngOnInit() {
@@ -49,35 +63,7 @@ export class BuracoPage implements OnInit {
       // 'street' : [null, Validators.required],
     });
 
-    //Captura a latitude e longitudo do usuário
-    this.geolocation.getCurrentPosition()
-      .then((resp) => {
-        this.latitude = resp.coords.latitude
-        this.longitude = resp.coords.longitude;
-
-        this.getEndereco();
-      })
-      .catch(err => {
-        //Tratamendo da excessão
-        console.log("Erro")
-      });
-  }
-
-  getEndereco() {
-    this.enderecoService.getEndereco(this.latitude, this.longitude)
-      .subscribe(resp => {
-        //console.log(resp);
-        //https://nominatim.org/release-docs/develop/api/Reverse/
-
-        this.localizacao.cidade = resp.features[0].properties.address.city;
-        this.localizacao.bairro = resp.features[0].properties.address.suburb;
-        this.localizacao.cep = resp.features[0].properties.address.postcode;
-        this.localizacao.logradouro = resp.features[0].properties.address.road;
-        this.localizacao.enderecoCompleto = resp.features[0].properties.display_name;
-
-      }, err => {
-        console.log(err);
-      });
+    this.getGeolocation();
   }
 
   //Responsável por abrir a camera para tirar fotografia do buraco
@@ -100,7 +86,6 @@ export class BuracoPage implements OnInit {
     });
   }
 
-
   async onFormSubmit(form: NgForm) {
 
     const loading = await this.loadingController.create({
@@ -122,5 +107,33 @@ export class BuracoPage implements OnInit {
         loading.dismiss();
       })
     loading.dismiss();
+  }
+
+  //Get current coordinates of device
+  //Get current coordinates of device
+  getGeolocation() {
+    this.geolocation.getCurrentPosition().then((resp) => {
+      this.geoLatitude = resp.coords.latitude;
+      this.geoLongitude = resp.coords.longitude;
+      this.geoAccuracy = resp.coords.accuracy;
+
+      //alert(this.geoLatitude);
+
+      this.getGeoencoder(this.geoLatitude, this.geoLongitude);
+    }).catch((error) => {
+      alert('Error getting location' + JSON.stringify(error));
+    });
+  }
+
+  //geocoder method to fetch address from coordinates passed as arguments
+  getGeoencoder(latitude, longitude) {
+    this.nativeGeocoder.reverseGeocode(latitude, longitude, this.geoencoderOptions)
+      .then((result: NativeGeocoderResult[]) => {
+        this.userLocation = result[0];
+
+      })
+      .catch((error: any) => {
+        alert('Erro ao recuperar endereço (getGeoencoder)' + JSON.stringify(error));
+      });
   }
 }

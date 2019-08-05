@@ -7,7 +7,9 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { catchError, tap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Localizacao } from '../interfaces/localizacao';
-
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { NativeGeocoder, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
+import { NativeGeocoderResult } from '@ionic-native/native-geocoder/ngx';
 
 @Injectable({
     providedIn: 'root'
@@ -16,25 +18,78 @@ import { Localizacao } from '../interfaces/localizacao';
 export class EnderecoService {
 
     public localizacao: Localizacao;
+    geoLatitude: number;
+    geoLongitude: number;
+    geoAccuracy: number;
+    geoAddress: string;
 
-    constructor(private http: HttpClient) {
+    watchLocationUpdates: any;
+    loading: any;
+    isWatching: boolean;
+
+    //Geocoder configuration
+    geoencoderOptions: NativeGeocoderOptions = {
+        useLocale: true,
+        maxResults: 5
+    };
+
+    constructor(
+        private geolocation: Geolocation,
+        private nativeGeocoder: NativeGeocoder
+    ) {
+    }    //Get current coordinates of device
+    getGeolocation() {
+        this.geolocation.getCurrentPosition().then((resp) => {
+            this.geoLatitude = resp.coords.latitude;
+            this.geoLongitude = resp.coords.longitude;
+            this.geoAccuracy = resp.coords.accuracy;
+            this.getGeoencoder(this.geoLatitude, this.geoLongitude);
+        }).catch((error) => {
+            alert('Error getting location' + JSON.stringify(error));
+        });
     }
 
-    getEndereco(latitude, longitude): Observable<any> {
-        return this.http.get<any>('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + latitude + '&lon=' + longitude)
-            .pipe(
-                tap(resp => {
-                    //return console.log('Retorno API --> ', clima);
-                    return resp;
-                }),
-                catchError(this.handleError([]))
-            );
+    //geocoder method to fetch address from coordinates passed as arguments
+    getGeoencoder(latitude, longitude) {
+        this.nativeGeocoder.reverseGeocode(latitude, longitude, this.geoencoderOptions)
+            .then((result: NativeGeocoderResult[]) => {
+                this.geoAddress = this.generateAddress(result[0]);
+            })
+            .catch((error: any) => {
+                alert('Error getting location' + JSON.stringify(error));
+            });
     }
 
-    private handleError<T>(result?: T) {
-        return (error: any): Observable<T> => {
-            console.error(error);
-            return of(result as T);
-        };
+    //Return Comma saperated address
+    generateAddress(addressObj) {
+        let obj = [];
+        let address = "";
+        for (let key in addressObj) {
+            obj.push(addressObj[key]);
+        }
+        obj.reverse();
+        for (let val in obj) {
+            if (obj[val].length)
+                address += obj[val] + ', ';
+        }
+        return address.slice(0, -2);
+    }
+
+
+    //Start location update watch
+    watchLocation() {
+        this.isWatching = true;
+        this.watchLocationUpdates = this.geolocation.watchPosition();
+        this.watchLocationUpdates.subscribe((resp) => {
+            this.geoLatitude = resp.coords.latitude;
+            this.geoLongitude = resp.coords.longitude;
+            this.getGeoencoder(this.geoLatitude, this.geoLongitude);
+        });
+    }
+
+    //Stop location update watch
+    stopLocationWatch() {
+        this.isWatching = false;
+        this.watchLocationUpdates.unsubscribe();
     }
 }

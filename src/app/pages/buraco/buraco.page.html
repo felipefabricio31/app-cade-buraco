@@ -13,35 +13,48 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-button (click)="getGeolocation()" type="submit" shape="round" color="danger" expand="block">
+    Atualizar localização
+  </ion-button>
+
   <form #form="ngForm" (ngSubmit)="onFormSubmit(form)">
+    <ion-item hidden>
+      <ion-label position="stacked" color="primary">Lat.</ion-label>
+      <ion-input type="text" name="Estado" ngModel>{{userLocation.latitude}}</ion-input>
+    </ion-item>
+    <ion-item hidden>
+      <ion-label position="stacked" color="primary">Long.</ion-label>
+      <ion-input type="text" name="Estado" ngModel>{{userLocation.longitude}}</ion-input>
+    </ion-item>
     <ion-item>
       <ion-label position="stacked" color="primary">Estado</ion-label>
-      <ion-input type="text" name="Estado" ngModel>{{localizacao.uf}}</ion-input>
+      <ion-input type="text" name="Estado" ngModel>{{userLocation.countryCode}}</ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked" color="primary">Cidade</ion-label>
-      <ion-input type="text" name="Cidade" ngModel>{{localizacao.cidade}}</ion-input>
+      <ion-input type="text" name="Cidade" ngModel>{{userLocation.subAdministrativeArea}}</ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked" color="primary">Bairro</ion-label>
-      <ion-input type="text" name="Bairro" ngModel>{{localizacao.bairro}}</ion-input>
+      <ion-input type="text" name="Bairro" ngModel>{{userLocation.subLocality}}</ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked" color="primary">Cep</ion-label>
-      <ion-input type="text" name="Cep" ngModel>{{localizacao.cep}}</ion-input>
+      <ion-input type="text" name="Cep" ngModel>{{userLocation.postalCode}}</ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked" color="primary">Logradouro</ion-label>
-      <ion-input type="text" name="Logradouro" ngModel>{{localizacao.logradouro}}</ion-input>
+      <ion-input type="text" name="Logradouro" ngModel>{{userLocation.thoroughfare}}</ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked" color="primary">Complemento</ion-label>
-      <ion-input type="text" name="Complemento" ngModel></ion-input>
+      <ion-label position="stacked" color="primary">Nº</ion-label>
+      <ion-input type="text" name="Logradouro" ngModel>{{userLocation.subThoroughfare}}</ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked" color="primary">Observação</ion-label>
-      <ion-input type="text" name="Observacao" ngModel></ion-input>
+      <ion-label position="stacked" color="primary">Referência</ion-label>
+      <ion-input type="text" name="Referência" ngModel></ion-input>
     </ion-item>
+
     <br>
 
     <img *ngIf="photo" [src]="photo" />
@@ -57,9 +70,4 @@
       Enviar
     </ion-button>
   </form>
-
-
-
-
-
 </ion-content>
