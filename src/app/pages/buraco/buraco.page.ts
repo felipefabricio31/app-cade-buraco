@@ -21,29 +21,20 @@ import { NativeGeocoderResult } from '@ionic-native/native-geocoder/ngx';
   providers: [Camera, AlertsComponent]
 })
 export class BuracoPage implements OnInit {
-
-  public localizacao: Localizacao;
+  watchLocationUpdates: any;
+  loading: any;
+  isWatching: boolean;
   userLocation;
   geoLatitude: number;
   geoLongitude: number;
   geoAccuracy: number;
   geoAddress: string;
 
-  watchLocationUpdates: any;
-  loading: any;
-  isWatching: boolean;
-
-  //Geocoder configuration
-  geoencoderOptions: NativeGeocoderOptions = {
-    useLocale: true,
-    maxResults: 5
-  };
-
   productForm: FormGroup;
   street: string = '';
   proto: string = '';
   photo: any;
-
+ 
   constructor(
     public loadingController: LoadingController,
     public alertController: AlertController,
@@ -55,16 +46,29 @@ export class BuracoPage implements OnInit {
     public navController: NavController,
     public alertsComponent: AlertsComponent,
     public geolocation: Geolocation,
-    private nativeGeocoder: NativeGeocoder
+    private nativeGeocoder: NativeGeocoder,
+    public localizacao: Localizacao
+
   ) { }
 
   ngOnInit() {
+
+    this.loading = this.loadingController.create();
+
     this.productForm = this.formBuilder.group({
       // 'street' : [null, Validators.required],
     });
 
     this.getGeolocation();
+
   }
+   
+  //Geocoder configuration
+  geoencoderOptions: NativeGeocoderOptions = {
+    useLocale: true,
+    maxResults: 5
+  };
+
 
   //Responsável por abrir a camera para tirar fotografia do buraco
   startCamera() {
@@ -129,11 +133,19 @@ export class BuracoPage implements OnInit {
   getGeoencoder(latitude, longitude) {
     this.nativeGeocoder.reverseGeocode(latitude, longitude, this.geoencoderOptions)
       .then((result: NativeGeocoderResult[]) => {
-        this.userLocation = result[0];
-
+        var retorno = result[0];
+        this.localizacao.latitude = retorno.latitude;
+        this.localizacao.longitude = retorno.longitude;
+        this.localizacao.uf = retorno.countryCode;
+        this.localizacao.cidade = retorno.subAdministrativeArea;
+        this.localizacao.bairro = retorno.subAdministrativeArea;
+        this.localizacao.cidade = retorno.subLocality;
+        this.localizacao.cep = retorno.postalCode;
+        this.localizacao.logradouro = retorno.thoroughfare;
+        this.localizacao.numero = retorno.subThoroughfare;
       })
       .catch((error: any) => {
-        alert('Erro ao recuperar endereço (getGeoencoder)' + JSON.stringify(error));
+        alert('Erro ao recuperar endereço, tente novamente(#2202)' + JSON.stringify(error));
       });
   }
 }

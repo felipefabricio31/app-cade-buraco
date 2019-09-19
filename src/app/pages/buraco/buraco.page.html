@@ -20,35 +20,35 @@
   <form #form="ngForm" (ngSubmit)="onFormSubmit(form)">
     <ion-item hidden>
       <ion-label position="stacked" color="primary">Lat.</ion-label>
-      <ion-input type="text" name="Estado" ngModel>{{userLocation.latitude}}</ion-input>
+      <ion-input type="text" name="latitude" ngModel>{{localizacao.latitude}}</ion-input>
     </ion-item>
     <ion-item hidden>
       <ion-label position="stacked" color="primary">Long.</ion-label>
-      <ion-input type="text" name="Estado" ngModel>{{userLocation.longitude}}</ion-input>
+      <ion-input type="text" name="longitude" ngModel>{{localizacao.longitude}}</ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked" color="primary">Estado</ion-label>
-      <ion-input type="text" name="Estado" ngModel>{{userLocation.countryCode}}</ion-input>
+      <ion-input type="text" name="Estado" ngModel>{{localizacao.uf}}</ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked" color="primary">Cidade</ion-label>
-      <ion-input type="text" name="Cidade" ngModel>{{userLocation.subAdministrativeArea}}</ion-input>
+      <ion-input type="text" name="Cidade" ngModel>{{localizacao.cidade}}</ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked" color="primary">Bairro</ion-label>
-      <ion-input type="text" name="Bairro" ngModel>{{userLocation.subLocality}}</ion-input>
+      <ion-input type="text" name="Bairro" ngModel>{{localizacao.bairro}}</ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked" color="primary">Cep</ion-label>
-      <ion-input type="text" name="Cep" ngModel>{{userLocation.postalCode}}</ion-input>
+      <ion-input type="text" name="Cep" ngModel>{{localizacao.cep}}</ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked" color="primary">Logradouro</ion-label>
-      <ion-input type="text" name="Logradouro" ngModel>{{userLocation.thoroughfare}}</ion-input>
+      <ion-input type="text" name="Logradouro" ngModel>{{localizacao.logradouro}}</ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked" color="primary">Nº</ion-label>
-      <ion-input type="text" name="Logradouro" ngModel>{{userLocation.subThoroughfare}}</ion-input>
+      <ion-input type="text" name="Logradouro" ngModel>{{localizacao.numero}}</ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked" color="primary">Referência</ion-label>
@@ -64,6 +64,7 @@
       <!-- Advanced: explicity set the icon for each platform -->
       <ion-icon ios="ios-camera" size="medium" md="md-camera"></ion-icon>
     </ion-button>
+
     <br>
 
     <ion-button type="submit" shape="round" color="primary" expand="block" [disabled]="!productForm.valid">
